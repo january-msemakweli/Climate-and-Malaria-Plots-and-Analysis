@@ -1,8 +1,6 @@
-## =======================================================
-## Malaria GAM: Full workflow
-## =======================================================
+## Malaria GAM Analysis
 
-## 0) Install & load packages (quietly)
+## Install & load packages
 install_if_missing <- function(pkgs) {
   to_install <- pkgs[!pkgs %in% rownames(installed.packages())]
   if (length(to_install)) install.packages(to_install, dependencies = TRUE)
@@ -11,13 +9,13 @@ pkgs <- c("mgcv","dplyr","tidyr","gratia","ggplot2","stringr","purrr")
 install_if_missing(pkgs)
 invisible(lapply(pkgs, library, character.only = TRUE))
 
-## 1) Reproducibility & paths
+## Setup
 set.seed(42)
 setwd(".")
 plots_dir <- file.path(getwd(), "Smooth Term Plots")
 if (!dir.exists(plots_dir)) dir.create(plots_dir)
 
-## 2) Helpers
+## Helper functions
 clean_name <- function(x) {
   x |>
     stringr::str_replace_all("s\\(|\\)", "") |>
@@ -75,7 +73,7 @@ draw_one_smooth <- function(fit, s_label) {
   p
 }
 
-## 3) Load & prepare data
+## Load and prepare data
 dat <- read.csv("Data.csv", stringsAsFactors = FALSE)
 dat$yearmon <- as.numeric(as.Date(paste0(dat$yearmon, "-01")))
 
@@ -97,7 +95,7 @@ dat <- dat %>%
   ) %>%
   tidyr::drop_na()
 
-## 4) Fit shrinkage-GAM
+## Fit GAM model
 gam_fit <- mgcv::gam(
   Malaria_incidence_per_10000 ~
     s(daytime_temperature,      bs = "cs", k = 10) +
@@ -131,8 +129,8 @@ print(gam.check(gam_fit))
 cat("\n=== Concurvity (safe) ===\n")
 print(safe_concurvity(gam_fit))
 
-## 5) Save each smooth term as PNG  (fixed)
-sm_names <- gratia::smooths(gam_fit)              # returns a character vector
+## Export smooth term plots
+sm_names <- gratia::smooths(gam_fit)
 stopifnot(is.character(sm_names) && length(sm_names) > 0)
 
 purrr::walk2(
