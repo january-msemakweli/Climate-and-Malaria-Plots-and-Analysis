@@ -100,7 +100,7 @@ The `Data.csv` file contains monthly time series data with the following variabl
 
 1. **Clone or download this repository**
    ```bash
-   git clone [repository-url]
+   git clone https://github.com/january-msemakweli/Climate-and-Malaria-Plots-and-Analysis
    cd "Climate and Malaria Plots and Analysis"
    ```
 
