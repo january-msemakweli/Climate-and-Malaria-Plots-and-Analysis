@@ -100,7 +100,7 @@ tidy_rain <- tibble(
   date = dates,
   value = as.numeric(rainfall_ts),
   seasonal = seas_rain,
-  series = "Monthly rainfall"
+  series = "Monthly rainfall (mm)"
 )
 
 tidy_both <- bind_rows(tidy_mal, tidy_rain)
