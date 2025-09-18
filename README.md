@@ -11,6 +11,7 @@ Climate and Malaria Plots and Analysis/
 ├── STL.R                             # STL decomposition analysis
 ├── GAM Analysis Code.R               # GAM analysis with smooth term plots
 ├── Preliminary_Analysis.R            # Comprehensive preliminary analysis
+├── df.R                              # STL seasonal comparisons and raw vs seasonal fits
 ├── Smooth Term Plots/                # Output directory for GAM plots
 ├── STL Plots/                        # Output directory for STL plots
 ├── Preliminary_Plots/                # Output directory for preliminary analysis
@@ -90,6 +91,25 @@ The `Data.csv` file contains monthly time series data with the following variabl
 - Peak months identification
 - Seasonal analysis by climate zones
 
+### 4. STL Seasonal Comparisons (`df.R`)
+**Purpose**: Detailed STL decomposition analysis comparing malaria incidence with individual climate variables.
+
+**What it does**:
+- Performs STL decomposition on malaria incidence and each climate variable
+- Creates standardized seasonal component comparisons
+- Generates raw vs seasonal fit plots for each variable pair
+- Uses publication-ready academic styling with consistent themes
+
+**Output**: 8 JPEG files in `Preliminary_Plots/` directory
+
+**Key visualizations**:
+- Malaria vs Rainfall seasonal components (standardized)
+- Malaria vs Daytime Temperature seasonal components
+- Malaria vs Nighttime Temperature seasonal components  
+- Malaria vs Relative Humidity seasonal components
+- Raw series with STL seasonal fits for each climate variable
+- Academic theme with no titles, enhanced legends, and professional styling
+
 ## How to Run the Code
 
 ### Prerequisites
@@ -129,11 +149,17 @@ The `Data.csv` file contains monthly time series data with the following variabl
    ```r
    source("Preliminary_Analysis.R")
    ```
+   
+   **For STL seasonal comparisons:**
+   ```r
+   source("df.R")
+   ```
 
 ### Alternative Setup (without renv)
 If you prefer not to use renv, the code will automatically install required packages:
 - `dplyr`, `zoo` (for STL analysis)
 - `mgcv`, `dplyr`, `tidyr`, `gratia`, `ggplot2`, `stringr`, `purrr` (for GAM analysis)
+- `tidyverse`, `zoo`, `lubridate` (for STL seasonal comparisons)
 
 ## Output Files
 
@@ -161,6 +187,16 @@ If you prefer not to use renv, the code will automatically install required pack
 - `08_summary_statistics.csv`: Summary statistics table
 - `09_peak_months.png`: Peak months identification
 - `10_seasonal_analysis.png`: Seasonal analysis by climate zones
+
+### STL Seasonal Comparisons
+- `11_stl_seasonal_malaria_vs_rainfall.jpg`: Standardized seasonal components comparison
+- `12_raw_vs_seasonal_fits.jpg`: Raw data with STL seasonal fits (malaria and rainfall)
+- `13_stl_seasonal_malaria_vs_daytime_temperature_°c_.jpg`: Malaria vs daytime temperature seasonality
+- `14_raw_vs_seasonal_fits_daytime_temperature_°c_.jpg`: Raw vs seasonal fits for temperature
+- `15_stl_seasonal_malaria_vs_nighttime_temperature_°c_.jpg`: Malaria vs nighttime temperature seasonality
+- `16_raw_vs_seasonal_fits_nighttime_temperature_°c_.jpg`: Raw vs seasonal fits for nighttime temperature
+- `17_stl_seasonal_malaria_vs_relative_humidity_.jpg`: Malaria vs humidity seasonality
+- `18_raw_vs_seasonal_fits_relative_humidity_.jpg`: Raw vs seasonal fits for humidity
 
 ## Code Features
 
