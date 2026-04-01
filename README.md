@@ -1,5 +1,5 @@
 # Climate and Malaria Analysis Project
-
+[![DOI](https://zenodo.org/badge/1047237973.svg)](https://doi.org/10.5281/zenodo.17458173)
 ## Overview
 This repository contains R code for analyzing the relationship between climate variables and malaria incidence in Dar es Salaam, Tanzania. The analysis includes both STL (Seasonal and Trend decomposition using Loess) decomposition and Generalized Additive Model (GAM) analysis.
 
