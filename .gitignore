@@ -2,7 +2,22 @@
 .Rhistory
 .RData
 .Ruserdata
+.Rprofile
+*.Rproj
+
+# Local/report artifacts
 GAM Analysis Report.Rmd
 GAM-Analysis-Report.pdf
 GAM-Analysis-Report.tex
 GAM-Analysis-Report.knit.md
+Rplots.pdf
+
+# Manuscript files
+*.docx
+
+# Spatial data and map outputs
+SHAPEFILES/
+Maps/
+
+# renv (local env not tracked in this repo)
+renv/
