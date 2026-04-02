@@ -55,7 +55,8 @@ map_plot <- ggplot2::ggplot(districts) +
     which_north = "true",
     style = ggspatial::north_arrow_orienteering(
       fill = c("black", "white"),
-      line_col = "black"
+      line_col = "black",
+      text_col = NA
     ),
     height = grid::unit(0.9, "cm"),
     width = grid::unit(0.9, "cm"),
