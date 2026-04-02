@@ -1,7 +1,7 @@
 # Climate and Malaria Analysis Project
 [![DOI](https://zenodo.org/badge/1047237973.svg)](https://doi.org/10.5281/zenodo.17458173)
 ## Overview
-This repository contains R code for analyzing the relationship between climate variables and malaria incidence in Dar es Salaam, Tanzania. The analysis includes both STL (Seasonal and Trend decomposition using Loess) decomposition and Generalized Additive Model (GAM) analysis.
+This repository contains R code for analyzing the relationship between climate variables and malaria incidence in Dar es Salaam, Tanzania. The analysis includes STL (Seasonal and Trend decomposition using Loess), Generalized Additive Model (GAM) analysis, and district-level mapping outputs.
 
 ## Project Structure
 
@@ -10,14 +10,15 @@ Climate and Malaria Plots and Analysis/
 ├── Data.csv                           # Main dataset with climate and malaria data
 ├── STL.R                             # STL decomposition analysis
 ├── GAM Analysis Code.R               # GAM analysis with smooth term plots
+├── Dar es Salaam District Map.R      # District map from local ward shapefile
 ├── Preliminary_Analysis.R            # Comprehensive preliminary analysis
 ├── df.R                              # STL seasonal comparisons and raw vs seasonal fits
+├── SHAPEFILES/                       # Local ward shapefile inputs (not tracked)
+├── Maps/                             # Output directory for map figures
 ├── Smooth Term Plots/                # Output directory for GAM plots
 ├── STL Plots/                        # Output directory for STL plots
 ├── Preliminary_Plots/                # Output directory for preliminary analysis
-├── renv/                             # R environment management
 ├── renv.lock                         # Locked package versions
-├── Climate and Malaria Plots and Analysis.Rproj  # RStudio project file
 └── README.md                         # This file
 ```
 
@@ -111,6 +112,18 @@ The `Data.csv` file contains monthly time series data with the following variabl
 - Raw series with STL seasonal fits for each climate variable
 - Academic theme with no titles, enhanced legends, and professional styling
 
+### 5. Dar es Salaam District Map (`Dar es Salaam District Map.R`)
+**Purpose**: Create a publication-ready district map of Dar es Salaam showing the five districts used in the study context.
+
+**What it does**:
+- Reads local ward boundaries from `SHAPEFILES/TANZANIA_2022PHC_WARDS_SHAPEFILES.shp`
+- Filters Dar es Salaam wards and aggregates to district polygons
+- Keeps the five districts: Ilala, Kinondoni, Temeke, Ubungo, and Kigamboni
+- Adds district labels and a north arrow symbol
+- Exports a high-resolution PNG (300 dpi)
+
+**Output**: `Maps/Dar_es_Salaam_5_Districts.png`
+
 ## How to Run the Code
 
 ### Prerequisites
@@ -125,16 +138,12 @@ The `Data.csv` file contains monthly time series data with the following variabl
    cd "Climate and Malaria Plots and Analysis"
    ```
 
-2. **Open the RStudio project**
-   - Double-click `Climate and Malaria Plots and Analysis.Rproj`
-   - Or open RStudio and use File → Open Project
-
-3. **Install dependencies** (if using renv)
+2. **Install dependencies** (if using renv)
    ```r
    renv::restore()
    ```
 
-4. **Run the analyses**
+3. **Run the analyses**
    
    **For STL decomposition:**
    ```r
@@ -156,11 +165,17 @@ The `Data.csv` file contains monthly time series data with the following variabl
    source("df.R")
    ```
 
+   **For Dar es Salaam district map:**
+   ```r
+   source("Dar es Salaam District Map.R")
+   ```
+
 ### Alternative Setup (without renv)
 If you prefer not to use renv, the code will automatically install required packages:
 - `dplyr`, `zoo` (for STL analysis)
 - `mgcv`, `dplyr`, `tidyr`, `gratia`, `ggplot2`, `stringr`, `purrr` (for GAM analysis)
 - `tidyverse`, `zoo`, `lubridate` (for STL seasonal comparisons)
+- `sf`, `ggplot2`, `ggspatial` (for district map plotting)
 
 ## Output Files
 
@@ -199,6 +214,9 @@ If you prefer not to use renv, the code will automatically install required pack
 - `16_raw_vs_seasonal_fits_nighttime_temperature_°c_.jpg`: Raw vs seasonal fits for nighttime temperature
 - `17_stl_seasonal_malaria_vs_relative_humidity_.jpg`: Malaria vs humidity seasonality
 - `18_raw_vs_seasonal_fits_relative_humidity_.jpg`: Raw vs seasonal fits for humidity
+
+### Dar es Salaam District Map
+- `Maps/Dar_es_Salaam_5_Districts.png`: District map (Ilala, Kinondoni, Temeke, Ubungo, Kigamboni), 300 dpi, white background, north arrow symbol
 
 ## Code Features
 
