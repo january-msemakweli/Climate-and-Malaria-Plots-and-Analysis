@@ -46,15 +46,19 @@ pretty_labs <- c(
   lag1_daytime_temperature = "Day Temp (lag 1 mo, °C)",
   lag2_daytime_temperature = "Day Temp (lag 2 mo, °C)",
   lag3_daytime_temperature = "Day Temp (lag 3 mo, °C)",
+  lag4_daytime_temperature = "Day Temp (lag 4 mo, °C)",
   lag1_nighttime_temperature = "Night Temp (lag 1 mo, °C)",
   lag2_nighttime_temperature = "Night Temp (lag 2 mo, °C)",
   lag3_nighttime_temperature = "Night Temp (lag 3 mo, °C)",
+  lag4_nighttime_temperature = "Night Temp (lag 4 mo, °C)",
   lag1_monthly_rainfall    = "Rainfall (lag 1 mo, mm)",
   lag2_monthly_rainfall    = "Rainfall (lag 2 mo, mm)",
   lag3_monthly_rainfall    = "Rainfall (lag 3 mo, mm)",
+  lag4_monthly_rainfall    = "Rainfall (lag 4 mo, mm)",
   lag1_Relative_humidity   = "Rel. Humidity (lag 1 mo, %)",
   lag2_Relative_humidity   = "Rel. Humidity (lag 2 mo, %)",
   lag3_Relative_humidity   = "Rel. Humidity (lag 3 mo, %)",
+  lag4_Relative_humidity   = "Rel. Humidity (lag 4 mo, %)",
   yearmon                  = "Time"
 )
 
@@ -83,15 +87,19 @@ dat <- dat %>%
     lag1_daytime_temperature = dplyr::lag(daytime_temperature, 1),
     lag2_daytime_temperature = dplyr::lag(daytime_temperature, 2),
     lag3_daytime_temperature = dplyr::lag(daytime_temperature, 3),
+    lag4_daytime_temperature = dplyr::lag(daytime_temperature, 4),
     lag1_nighttime_temperature = dplyr::lag(nighttime_temperature, 1),
     lag2_nighttime_temperature = dplyr::lag(nighttime_temperature, 2),
     lag3_nighttime_temperature = dplyr::lag(nighttime_temperature, 3),
+    lag4_nighttime_temperature = dplyr::lag(nighttime_temperature, 4),
     lag1_monthly_rainfall    = dplyr::lag(monthly_rainfall, 1),
     lag2_monthly_rainfall    = dplyr::lag(monthly_rainfall, 2),
     lag3_monthly_rainfall    = dplyr::lag(monthly_rainfall, 3),
+    lag4_monthly_rainfall    = dplyr::lag(monthly_rainfall, 4),
     lag1_Relative_humidity   = dplyr::lag(Relative_humidity, 1),
     lag2_Relative_humidity   = dplyr::lag(Relative_humidity, 2),
-    lag3_Relative_humidity   = dplyr::lag(Relative_humidity, 3)
+    lag3_Relative_humidity   = dplyr::lag(Relative_humidity, 3),
+    lag4_Relative_humidity   = dplyr::lag(Relative_humidity, 4)
   ) %>%
   tidyr::drop_na()
 
@@ -120,14 +128,59 @@ gam_fit <- mgcv::gam(
   select = TRUE
 )
 
+## Fit GAM model with additional 4-month lags
+gam_fit_4_month <- mgcv::gam(
+  Malaria_incidence_per_10000 ~
+    s(daytime_temperature,      bs = "cs", k = 10) +
+    s(nighttime_temperature,      bs = "cs", k = 10) +
+    s(monthly_rainfall,         bs = "cs", k = 10) +
+    s(Relative_humidity,        bs = "cs", k = 10) +
+    s(lag1_daytime_temperature, bs = "cs", k = 10) +
+    s(lag2_daytime_temperature, bs = "cs", k = 10) +
+    s(lag3_daytime_temperature, bs = "cs", k = 10) +
+    s(lag4_daytime_temperature, bs = "cs", k = 10) +
+    s(lag1_nighttime_temperature, bs = "cs", k = 10) +
+    s(lag2_nighttime_temperature, bs = "cs", k = 10) +
+    s(lag3_nighttime_temperature, bs = "cs", k = 10) +
+    s(lag4_nighttime_temperature, bs = "cs", k = 10) +
+    s(lag1_monthly_rainfall,    bs = "cs", k = 10) +
+    s(lag2_monthly_rainfall,    bs = "cs", k = 10) +
+    s(lag3_monthly_rainfall,    bs = "cs", k = 10) +
+    s(lag4_monthly_rainfall,    bs = "cs", k = 10) +
+    s(lag1_Relative_humidity,   bs = "cs", k = 10) +
+    s(lag2_Relative_humidity,   bs = "cs", k = 10) +
+    s(lag3_Relative_humidity,   bs = "cs", k = 10) +
+    s(lag4_Relative_humidity,   bs = "cs", k = 10) +
+    s(yearmon,                  bs = "cs", k = 12),
+  data   = dat,
+  method = "REML",
+  select = TRUE
+)
+
 cat("\n=== Model summary ===\n")
 print(summary(gam_fit))
+
+cat("\n=== Model summary (4-month lag model) ===\n")
+print(summary(gam_fit_4_month))
+
+cat("\n=== AIC comparison (3-month vs 4-month lag models) ===\n")
+print(AIC(gam_fit, gam_fit_4_month))
 
 cat("\n=== gam.check ===\n")
 print(gam.check(gam_fit))
 
 cat("\n=== Concurvity (safe) ===\n")
 print(safe_concurvity(gam_fit))
+
+## Residual temporal autocorrelation (ACF + PACF) saved as one 300 DPI PNG
+acf_pacf_file <- file.path(plots_dir, "ACF_PACF_GAM_Residuals.png")
+png(filename = acf_pacf_file, width = 10, height = 5, units = "in", res = 300)
+op <- par(mfrow = c(1, 2))
+acf(residuals(gam_fit), main = "ACF of GAM Residuals")
+pacf(residuals(gam_fit), main = "PACF of GAM Residuals")
+par(op)
+dev.off()
+cat("\nSaved residual ACF/PACF plot to:\n", acf_pacf_file, "\n")
 
 ## Export smooth term plots
 sm_names <- gratia::smooths(gam_fit)

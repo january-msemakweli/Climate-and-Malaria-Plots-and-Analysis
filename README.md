@@ -55,10 +55,11 @@ The `Data.csv` file contains monthly time series data with the following variabl
 
 **What it does**:
 - Fits GAM with smooth terms for all climate variables
-- Includes lagged effects (1-3 months) for each climate variable
+- Includes lagged effects (1-3 months) and tests an extended 4-month lag model
 - Uses shrinkage selection to automatically remove unimportant terms
 - Creates individual plots for each smooth term
-- Performs model diagnostics (gam.check, concurvity)
+- Performs model diagnostics (gam.check, concurvity, residual ACF/PACF)
+- Compares 3-month and 4-month lag GAM specifications using AIC
 
 **Output**: Multiple PNG files in `Smooth Term Plots/` directory
 
@@ -175,6 +176,7 @@ If you prefer not to use renv, the code will automatically install required pack
   - Individual smooth term effects
   - 95% confidence intervals
   - Partial effects on malaria incidence
+- `Smooth Term Plots/ACF_PACF_GAM_Residuals.png`: Combined residual ACF/PACF diagnostic plot (300 dpi)
 
 ### Preliminary Analysis
 - `01_malaria_timeseries.png`: Monthly malaria incidence over time
@@ -231,7 +233,8 @@ If you prefer not to use renv, the code will automatically install required pack
 ### Model Diagnostics
 - `gam.check()`: Residual diagnostics
 - `concurvity()`: Check for concurvity issues
-- Automatic model validation
+- Residual autocorrelation checks via `acf()` and `pacf()`
+- AIC comparison between 3-lag and 4-lag GAM models
 
 ## Troubleshooting
 
