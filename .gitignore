@@ -17,7 +17,6 @@ Rplots.pdf
 
 # Spatial data and map outputs
 SHAPEFILES/
-Maps/
 
 # renv (local env not tracked in this repo)
 renv/
